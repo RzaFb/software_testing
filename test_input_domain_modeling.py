@@ -131,5 +131,32 @@ class TestInputDomainModeling(unittest.TestCase):
         expected = "['S', 'Red']\n"
         self.assertEqual(result.stdout, expected)
 
+    def test_invalid_mode(self):
+        sys.argv = ['input_domain_modeling.py',
+                    '--characteristics', 'size:S,M,L', 'color:Red,Green,Blue',
+                    '--abstract_blocks', 'shirt:size,color', '--mode', 'INVALID']
+        with self.assertRaises(SystemExit):
+            parse_arguments()
+
+    def test_invalid_characteristics_format(self):
+        sys.argv = ['input_domain_modeling.py',
+                    '--characteristics', 'size:S,M,L', 'invalidformat',
+                    '--abstract_blocks', 'shirt:size,color', '--mode', 'ACoc']
+        with self.assertRaises(ValueError):
+            main()
+
+    def test_invalid_abstract_blocks_format(self):
+        sys.argv = ['input_domain_modeling.py',
+                    '--characteristics', 'size:S,M,L', 'color:Red,Green,Blue',
+                    '--abstract_blocks', 'invalidformat', '--mode', 'ACoc']
+        with self.assertRaises(ValueError):
+            main()
+
+    def test_main_function_integration(self):
+        sys.argv = ['input_domain_modeling.py',
+                    '--characteristics', 'size:S,M,L', 'color:Red,Green,Blue',
+                    '--abstract_blocks', 'shirt:size,color', '--mode', 'ACoc']
+        main()
+
 if __name__ == '__main__':
     unittest.main()
